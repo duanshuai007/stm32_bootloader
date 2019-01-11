@@ -185,6 +185,12 @@
       <name>$PROJ_DIR$\..\Src\maincontrol.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\..\Src\reboot.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\..\Inc\reboot.h</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\..\Src\rtc.c</name>
     </file>
     <file>

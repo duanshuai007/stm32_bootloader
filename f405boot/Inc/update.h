@@ -2,7 +2,8 @@
 #define _UPDATE_H_
 
 #define F103_FW_SAVE_IN     0x08004000
-#define F103_FW_SIZE        22124
+#define F103_FW_SIZE        22368
+#define FWVersion           0x13 
 
 #include "stdint.h"
 

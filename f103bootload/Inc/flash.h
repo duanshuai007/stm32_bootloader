@@ -9,7 +9,7 @@
 #define READ_FLASH_WORD(addr) (*(volatile uint32_t *)(addr))
 #define READ_FLASH_BYTE(addr) (*(volatile uint8_t *)(addr))
 
-uint8_t GetLocalFWVersion(void);
+uint8_t FlashGetLocalFWVersion(void);
 
 void FlashUpdateFWVersion(uint8_t ver);
 

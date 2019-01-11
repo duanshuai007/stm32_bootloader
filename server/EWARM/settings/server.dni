@@ -14,7 +14,7 @@ Watch0=_ 0 "" 0 "" 0 "" 0 "" 0 0 0 0
 Watch1=_ 0 "" 0 "" 0 "" 0 "" 0 0 0 0
 CStepIntDis=_ 0
 [DebugChecksum]
-Checksum=-1295034169
+Checksum=145018963
 [Exceptions]
 StopOnUncaught=_ 0
 StopOnThrow=_ 0
@@ -89,14 +89,9 @@ Fmt11=uint8_t[6]	4	0
 [watch_formats]
 Fmt0={W}1:cmd	0	2
 Fmt1={W}42:lora_send_timer	4	0
-[CallStackLog]
+[Trace2]
 Enabled=0
-[DriverProfiling]
-Enabled=0
-Mode=3
-Graph=0
-Symbiont=0
-Exclusions=
+ShowSource=0
 [SWOTraceWindow]
 PcSampling=0
 InterruptLogs=0
@@ -135,6 +130,13 @@ GraphEnabled=0
 ShowTimeLog=1
 ShowTimeSum=1
 SumSortOrder=0
+[Disassemble mode]
+mode=0
+[Breakpoints2]
+Bp0=_ 0 "EMUL_DATA" "loracmd_add_to_list" 0 0 0 0 4294967295
+Bp1=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Src\maincontrol.c}.333.9" 0 0 1 "" 0 "" 0
+Bp2=_ 1 "EMUL_CODE" "{$PROJ_DIR$\..\Src\reboot.c}.28.7" 0 0 1 "" 0 "" 0
+Count=3
 [Log file]
 LoggingEnabled=_ 0
 LogFile=_ ""
@@ -142,15 +144,18 @@ Category=_ 0
 [TermIOLog]
 LoggingEnabled=_ 0
 LogFile=_ ""
+[Aliases]
+Count=0
+SuppressDialog=0
+[CallStackLog]
+Enabled=0
 [PowerProbe]
 Frequency=10000
 Probe0=I0
 ProbeSetup0=2 1 1 2 0 0
-[Disassemble mode]
-mode=0
-[Breakpoints2]
-Bp0=_ 0 "EMUL_DATA" "loracmd_add_to_list" 0 0 0 0 4294967295
-Count=1
-[Aliases]
-Count=0
-SuppressDialog=0
+[DriverProfiling]
+Enabled=0
+Mode=3
+Graph=0
+Symbiont=0
+Exclusions=

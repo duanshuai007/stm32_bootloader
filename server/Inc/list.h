@@ -70,6 +70,10 @@ void SendCMDRespToList(uint16_t id, uint8_t cmd, uint32_t identify, uint8_t resp
 */
 void ListTask(void);
 
+/**
+*   等待链表中的设备空闲
+*/
+bool waitAllDeviceisIdle(void);
 
 /*
 *   打印整个表

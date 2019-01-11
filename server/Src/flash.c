@@ -316,6 +316,11 @@ void FlashTask(void)
   }
 }
 
+void UpdateFlash(void)
+{
+  FlashWriteDevie(gFDList);
+}
+
 #if 0
 void LookList(void)
 {

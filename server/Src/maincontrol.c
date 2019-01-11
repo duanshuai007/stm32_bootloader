@@ -5,6 +5,7 @@
 #include "stdlib.h"
 #include "crc16.h"
 #include "flash.h"
+#include "reboot.h"
 
 extern UART_HandleTypeDef huart2;
 extern DMA_HandleTypeDef hdma_usart2_rx;
@@ -13,7 +14,7 @@ extern DMA_HandleTypeDef hdma_usart2_tx;
 static UartModule *gUartMx;      //f405串口设备结构体
 static uint8_t uart2_dma_rbuff[UART2_RX_DMA_LEN] = {0};
 static uint8_t uart2_dma_sbuff[UART2_TX_DMA_LEN] = {0};
-
+static bool enable_communication = true;
 /*
 *   初始化与F405通信的串口相关结构体
 */
@@ -296,6 +297,10 @@ void F405ReveiveHandler(UART_HandleTypeDef *huart)
                        gUartMx->dma_rbuff_size);
 }
 
+void closeF405Communication(void)
+{
+  enable_communication = false;
+}
 /*
 *   F405命令处理线程
 *   F405只能控制由本机发送出去的设备ID，对于其他ID不进行操作
@@ -310,24 +315,28 @@ void F405Task(void)
   //F405命令接收处理
   if ( DataPoolGetNumByte(dp, (uint8_t *)(&cmd), sizeof(T_Control_Cmd)) ) {
     
-    uint8_t crc = crc8_chk_value((uint8_t *)(&cmd), 7);
-    
-    if(crc != cmd.crc) {
-      DEBUG_ERROR("receive cmd for F405 error: crc check error, crc = %02x, cmd.crc = %02x\r\n", crc, cmd.crc);
-      return;
-    }
-    
-    DEBUG_INFO("rec from F405:id:%04x, cmd:%d, identify:%08x\r\n",
-           cmd.endpointId,cmd.action,cmd.identity);
-    
-    if ( CMD_GET_ALL_NODE == cmd.action ) {
-      //接收到f405的上线响应信息，发送所有在线节点给405
-      SendALLDeviceNodeToF405();
-    } else {
-      if (SendCMDToList(cmd.endpointId, cmd.action, cmd.identity)  != true) {
-        //send device not exist msg to f405
-        //所有的设备都是存在，不会出现不存在的设备的情况
-//        UartSendMSGToF405(NODE_NOTEXIST, cmd.endpointId, 0);
+    if (enable_communication == true) {
+      uint8_t crc = crc8_chk_value((uint8_t *)(&cmd), 7);
+      
+      if(crc != cmd.crc) {
+        DEBUG_ERROR("receive cmd for F405 error: crc check error, crc = %02x, cmd.crc = %02x\r\n", crc, cmd.crc);
+        return;
+      }
+      
+      DEBUG_INFO("rec from F405:id:%04x, cmd:%d, identify:%08x\r\n",
+                 cmd.endpointId,cmd.action,cmd.identity);
+      
+      if ( CMD_GET_ALL_NODE == cmd.action ) {
+        //接收到f405的上线响应信息，发送所有在线节点给405
+        SendALLDeviceNodeToF405();
+      } else if ( CMD_FW_UPDATE == cmd.action) {
+        gotoReBoot();
+      } else {
+        if (SendCMDToList(cmd.endpointId, cmd.action, cmd.identity) != true) {
+          //send device not exist msg to f405
+          //所有的设备都是存在，不会出现不存在的设备的情况
+          //        UartSendMSGToF405(NODE_NOTEXIST, cmd.endpointId, 0);
+        }
       }
     }
   }

@@ -67,6 +67,10 @@ void FlashTask(void);
 void SendALLDeviceNodeToF405(void);
 
 /*
+*   立即更新flash内容
+*/
+void UpdateFlash(void);
+/*
 *   Debug Function
 */
 #if 0

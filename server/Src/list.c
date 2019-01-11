@@ -7,6 +7,7 @@
 #include "maincontrol.h"
 #include "rtc.h"
 #include "flash.h"
+#include "reboot.h"
 
 extern RTC_HandleTypeDef hrtc;
 
@@ -197,6 +198,21 @@ void SendCMDRespToList(uint16_t id, uint8_t cmd, uint32_t identify, uint8_t resp
   }
 }
 
+bool waitAllDeviceisIdle(void)
+{
+  List *ln = gList;
+  while ( ln ) {
+    if (ln->Device) {
+      if (ln->Device->u8CMDSTATUS != CMD_STATUS_IDLE)
+        return false;
+    }
+    
+    ln = ln->next;
+  }
+  
+  return true;
+}
+
 /*
 *   设备链表进程，在主循环内调用，循环判断链表内每个设备的状态
 *   当对应的u8CMDSTATUS状态为:
@@ -216,15 +232,17 @@ void ListTask(void)
       switch(ln->Device->u8CMDSTATUS) {
       case CMD_STATUS_IDLE:{
         nowTime = GetRTCTime();
-        if ((( ln->Device->DeviceOnLine == true )   //设备在线则发送心跳包
-             && ( nowTime - ln->Device->u32Time > HEART_TIMEINTERVAL )) ||
-            ((ln->Device->DeviceOnLine == false)    //设备掉线则需要等待更久时间进行心跳检测
-             && ( nowTime - ln->Device->u32Time > CHECK_OFFLINE_DEVICE_MAX_TIMEINTERVAL )))
-        {
+        if (isReadyReboot() == false) { //如果准备重启了，就停止发送心跳包，等待设备空闲
+          if ((( ln->Device->DeviceOnLine == true )   //设备在线则发送心跳包
+               && ( nowTime - ln->Device->u32Time > HEART_TIMEINTERVAL )) ||
+              ((ln->Device->DeviceOnLine == false)    //设备掉线则需要等待更久时间进行心跳检测
+               && ( nowTime - ln->Device->u32Time > CHECK_OFFLINE_DEVICE_MAX_TIMEINTERVAL )))
+          {
             ln->Device->u8CMDSTATUS = CMD_STATUS_STANDBY;
             ln->Device->u8CMD = DEVICE_HEART;
             ln->Device->u8RESP = 0;
             ln->Device->u32Identify = 0;
+          }
         }
       }
       break;

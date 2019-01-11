@@ -2,7 +2,7 @@
 #include "stm32f1xx.h"
 #include "stdlib.h"
 
-uint8_t GetLocalFWVersion(void)
+uint8_t FlashGetLocalFWVersion(void)
 {
   uint8_t buf[4] = {0};
   uint8_t version = 0;

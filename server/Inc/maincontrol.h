@@ -18,6 +18,7 @@ typedef enum
   CMD_BEEP_STATUS_GET   = 6,
   CMD_ADC_GET           = 7,
   CMD_GET_ALL_NODE      = 8,
+  CMD_FW_UPDATE         = 9,
 }CMD_TYPE;
 
 //server内部与endpoint之间的通信命令，与405 cmd共占用资源
@@ -81,6 +82,12 @@ void F405ReveiveHandler(UART_HandleTypeDef *huart);
 *   F405只能控制由本机发送出去的设备ID，对于其他ID不进行操作
 */
 void F405Task(void);
+
+/*
+*   停止从F405接收新的数据
+*   不影响等待发送中的数据
+*/
+void closeF405Communication(void);
 
 #endif
 

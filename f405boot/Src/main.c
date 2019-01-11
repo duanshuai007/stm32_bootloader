@@ -41,9 +41,10 @@
 #include "stm32f4xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "crc16.h"
 #include "uartmodule.h"
 #include "user_config.h"
+
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -104,12 +105,11 @@ int main(void)
   MX_DMA_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-//  __HAL_UART_ENABLE_IT(&huart2, UART_IT_IDLE);
-//  HAL_UART_Receive_DMA(&huart2, uart_dma_buffer, 64);
   
   UartModuleInit(&huart2);
   /* USER CODE END 2 */
 
+  uint32_t delay = 0;
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -118,8 +118,25 @@ int main(void)
   /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
-//    HAL_Delay(100);
     UartModuleDataProcess();
+#if 0
+    delay++;
+    if(delay > 200000) {
+      uint8_t buffer[8] = {0};
+      buffer[0] = 1;
+      buffer[1] = 2;
+      buffer[2] = 3;
+      buffer[3] = 4;
+      buffer[4] = 0;
+      buffer[5] = 0xa;
+      buffer[6] = 9;
+      buffer[7] = crc8_chk_value(buffer, 7);
+      HAL_UART_Transmit(&huart2, buffer, 8, 100);
+      delay = 0;
+    }
+    
+    HAL_Delay(1);
+#endif
   }
   /* USER CODE END 3 */
 

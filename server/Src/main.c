@@ -45,6 +45,7 @@
 #include "maincontrol.h"
 #include "flash.h"
 #include "rtc.h"
+#include "reboot.h"
 #include "user_config.h"
 /* USER CODE END Includes */
 
@@ -187,6 +188,7 @@ int main(void)
     F405Task();
     ListTask();
     FlashTask();
+    ReBootTask();
   }
   /* USER CODE END 3 */
 

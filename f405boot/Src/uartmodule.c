@@ -28,7 +28,6 @@ UartModule *UartModuleInit(UART_HandleTypeDef *huart)
   gUartMX.txDataPool = NULL;
   
   __HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
-//  __HAL_DMA_DISABLE_IT(huart->hdmarx, DMA_IT_HT);
   HAL_UART_Receive_DMA(huart, dma_rbuffer, DMA_RECV_BUFFER_SIZE);
   
   return &gUartMX;
@@ -79,8 +78,6 @@ bool CopyDataFromDMAHandler(UART_HandleTypeDef *huart)
   
   return false;
 }
-
-uint8_t FWVersion = 0x10;
 
 void UartModuleDataProcess(void)
 {

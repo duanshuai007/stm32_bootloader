@@ -105,21 +105,12 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
-  HAL_FLASH_Unlock();
-  /* Clear all FLASH flags */
-  __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_EOP | FLASH_FLAG_PGERR | FLASH_FLAG_WRPERR);
-  /* Unlock the Program memory */
-  HAL_FLASH_Lock();
   
-  version = GetLocalFWVersion();
+  version = FlashGetLocalFWVersion();
   if (version == 0) {
     //版本号错误，此时就直接从服务器下载固件
     FlashUpdateFWVersion(0);
   }
-  
-  //debug
-  FlashUpdateFWVersion(0);
   
   BootLoad_UartInit(&huart2);
   
@@ -135,7 +126,7 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
     //检查是否有更新
-    HAL_Delay(1000);
+    HAL_Delay(3000);
     ret = CheckUpdata(version);
     if(ret == 1) {
       //获取新版本号
