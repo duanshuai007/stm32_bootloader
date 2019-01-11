@@ -1,4 +1,4 @@
-f103bootload/EWARM/f103bootloadi
-f103bootloadapp/EWARM/f103bootloadapp
-f405boot/EWARM/f405boot
-server/EWARM/server
+f103bootloadapp/EWARM
+server/EWARM
+f103bootload/EWARM
+f405boot/EWARM
